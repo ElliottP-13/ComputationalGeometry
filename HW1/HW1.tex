@@ -11,8 +11,56 @@
 \begin{document}
 \maketitle
 
-\newpage
-Hello
+\problem{1}
+% Copy from Millman tex source when posted
+\hrule
 
+Some sort of binary search. 
+
+Jointly search P and P'
+Pick $a \in P, \sp b \in P'$
+Want line with highest z intercept
+
+Idea: O(n) run Grahm's Scan on it. Already sorted so takes O(n) time.
+
+Idea: Start at $a$ compute point $b \in P'$ tangent to $a$ (O (log n)). 
+Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Then done????
+
+\begin{algorithm}
+    \caption{Tangent Function}\label{guests}
+    \begin{algorithmic}[1]
+    \Function{Tangent}{$a, P$}
+        \State Binary search to find point of tangency
+        \State $low \gets 0$
+        \State $high \gets |P|$
+        \While{!found}
+            \State $m \gets \lceil (low + high)/2 \rceil$
+            \State $line \gets \overrightarrow{a,m}$
+            \If{$line([m + 1]_x) > [m + 1]_y$ and $line([m - 1]_x) > [m - 1]_y$  }
+                \State found it (is supporting line)
+                \State \textbf{return} m
+            \ElsIf{$line([m + 1]_x) > [m + 1]_y$}
+                \State line intersects some point before m (tangent point to left)
+                \State $high \gets m - 1$
+            \ElsIf{$line([m - 1]_x) > [m - 1]_y$}
+                \State line intersects some point after m (tangent point to right)
+                \State $low \gets m + 1$
+            \EndIf
+        \EndWhile
+    \EndFunction
+    \end{algorithmic}
+
+    \begin{algorithmic}[1]
+        \Function{UpperTangent}{$P, P'$}
+            \State Run Tangent 3 times to find upper tangent.
+            \State $a \gets |P|/2$ \quad // Random point in $P$
+            \State $b \gets Tangent(a, P')$ \quad // So we can 'see' $p_i$ from $b$
+            \State $a \gets Tangent(b, P)$ \quad // Finds $p_i$
+            \State $b \gets Tangent(a, P')$ \quad // Finds $p_j$
+            \State \textbf{return} $\overrightarrow{a,b}$
+        \EndFunction
+        \end{algorithmic}
+
+\end{algorithm}
 
 \end{document}
