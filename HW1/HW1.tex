@@ -63,4 +63,81 @@ Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Th
 
 \end{algorithm}
 
+
+
+
+
+
+
+
+
+
+
+
+\problem{2}
+
+\hrule
+
+\begin{enumerate}[1. ]
+    \item The points on the $Pareto(P)$ fall on a series of horizontal and vertical line segments.
+    It follows a line in 'Manhattan' distance. In order to make the analogous assertion,
+    we define corner $C(p)$ $p \in P$ as the region $(x,y) \in \reals ^2 \sp x \leq p_x, \sp y \leq p_y$.
+    
+
+    Then a point $p$ is on the Pareto of a set $P$ if and only if
+    there is no other corner $C(p'), \sp p \neq p'$, containing $p$
+
+    \item 
+    This is almost identical to Grahm's Scan. We replace the Orient() function with a different comparison.
+    We simply compare the $y$ values of adjacent points. Since the points are in sorted, $x$, order
+    if a a point $p_i$ has a larger y-coordinate than $p_{i-1}$ the $p_{i-1}$ would be in $C(p_i)$ so is not on the Pareto.
+    Since this comparison only needs the first point in the stack, we also adjust initialization of $S$
+    to only push $p_1$ onto the stack, and to not terminate the while loop unless there are $0$ points in the stack.
+    
+    This has the same running time as Grahm's Scam. Since after sorting, the algorithm takes a linear pass through
+    all of the points. It also only pops a point at most once from the stack. The only difference with this algorithm
+    from Grahm's Scan is the Orient. Since comparing y-coordinates is also a constant time lookup, our running time is $O(n log(n))$
+    due to the sorting in line 2.
+    \begin{algorithm}
+        \caption{Pareto Scan}\label{guests}
+        \begin{algorithmic}[1]
+        \Function{ParetoScan}{$P$}
+            \State sort $P$ by increasing $x$ value
+            \State push $p_1$ onto stack $S$
+            \For{$i \gets 3,..., n$}
+                \While{$|S| \geq 1$ and $p_{i,y} \geq S[top]_y$}
+                    \State pop $S$
+                \EndWhile
+                \State push $p_i$ onto $S$
+            \EndFor
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    \item Our modified Jarvis march algorithm would search for the point with the greatest $y$ value.
+    Then it would loop and search for the point with the next greatest y-coordinate to the right of the previous point ($p_{i,x} > p_{i-1,x}$).
+    This loop is repeated $h - 1$ times (the first point was found in initialization step of finding point with largest y-coordinate).
+
+    \begin{algorithm}
+        \caption{Jarvis Stairs}\label{guests}
+        \begin{algorithmic}[1]
+        \Function{JarvisStairs}{$P$}
+            \State find point $p_1$ with largest y-coordinate
+            \State $S \gets p_1$
+            \For{$i \gets 2,..., h$}
+                \State find point $p_i$ with largest y-coordinate such that $p_{i,x} > p_{i-1,x}$
+            \EndFor
+            \State \textbf{return} S
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+\end{enumerate}
+
+
+
+
+
+
+
 \end{document}
