@@ -8,6 +8,17 @@
 \rhead{Homework 1}
 \lhead{Elliott Pryor}
 
+
+\makeatletter
+\def\mathcolor#1#{\@mathcolor{#1}}
+\def\@mathcolor#1#2#3{%
+  \protect\leavevmode
+  \begingroup
+    \color#1{#2}#3%
+  \endgroup
+}
+\makeatother
+
 \begin{document}
 \maketitle
 
@@ -28,6 +39,7 @@ Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Th
 
 \begin{algorithm}
     \caption{Tangent Function}\label{guests}
+    \label{alg:prob1}
     \begin{algorithmic}[1]
     \Function{Tangent}{$a, P$}
         \State Binary search to find point of tangency
@@ -137,6 +149,41 @@ Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Th
 
 
 
+
+\problem{3}
+
+We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn), and $Orient(a,b,c) < 0$ if it is oriented clockwise (right turn)
+
+\begin{algorithm}
+    \caption{Tangent Function}\label{guests}
+    \label{alg:prob1}
+    \begin{algorithmic}[1]
+    \Function{Tangent}{$a, P$}
+        \State Binary search to find point of tangency
+        \State $low \gets 0$
+        \State $high \gets |P|$
+        \State $p_1$, $p_2$
+        \While{!found}
+            \State $c \gets \lceil (low + high)/2 \rceil$
+            \State $b \gets c-1, \sp d \gets c + 1$ \quad b is point counter-clockwise from a, d is point clockwise from a
+            \If{$Orient(a, c, b) = Orient(a, c, d)$}
+                \State found tangent
+                \State $p_1 \gets m$
+                \State \textbf{break while}
+            \ElsIf{$Orient(a,c,b) > 0$ and $Orient(a,c,d) < 0$}
+                \State Need to move search point left (counter-clockwise)
+                \State $high \gets b$
+            \ElsIf{$Orient(a,c,b) < 0$ and $Orient(a,c,d > 0)$}
+                \State need to move search point right (clockwise)
+                \State $low \gets d$
+            \EndIf
+        \EndWhile
+
+        \State Repeat same while loop but flipping inequality signs to find other tangency point.
+        \State \textbf{return} $p_1, p_2$
+    \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 
 
