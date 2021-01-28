@@ -38,7 +38,7 @@ Idea: Start at $a$ compute point $b \in P'$ tangent to $a$ (O (log n)).
 Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Then done????
 
 \begin{algorithm}
-    \caption{Tangent Function}\label{guests}
+    \caption{Tangent Function}
     \label{alg:prob1}
     \begin{algorithmic}[1]
     \Function{Tangent}{$a, P$}
@@ -111,12 +111,13 @@ Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Th
     from Grahm's Scan is the Orient. Since comparing y-coordinates is also a constant time lookup, our running time is $O(n log(n))$
     due to the sorting in line 2.
     \begin{algorithm}
-        \caption{Pareto Scan}\label{guests}
+        \caption{Pareto Scan}
+        \label{alg:pareto}
         \begin{algorithmic}[1]
         \Function{ParetoScan}{$P$}
             \State sort $P$ by increasing $x$ value
             \State push $p_1$ onto stack $S$
-            \For{$i \gets 3,..., n$}
+            \For{$i \gets 2,..., n$}
                 \While{$|S| \geq 1$ and $p_{i,y} \geq S[top]_y$}
                     \State pop $S$
                 \EndWhile
@@ -131,7 +132,8 @@ Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Th
     This loop is repeated $h - 1$ times (the first point was found in initialization step of finding point with largest y-coordinate).
 
     \begin{algorithm}
-        \caption{Jarvis Stairs}\label{guests}
+        \caption{Jarvis Stairs}
+        \label{alg:jarvis_stairs}
         \begin{algorithmic}[1]
         \Function{JarvisStairs}{$P$}
             \State find point $p_1$ with largest y-coordinate
@@ -143,6 +145,37 @@ Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Th
         \EndFunction
         \end{algorithmic}
     \end{algorithm}
+
+    \item We start by dividing $P$ into $n/h$ sets of size $h$. 
+    We run Pareto Scan (Algorithm \ref{alg:pareto}) on each of the $n/h$ sets.
+    The runtime of this step is $O(h \log(h))$ repeated $n/h$ times: $O(n \log (h))$.
+
+    We can then merge these in $O(n)$ time. We know that each pareto front found is at most $h$ long.
+    We merge these fronts in sorted order by $x$. This takes $O(n)$ this is the same as merge operation in MergeSort.
+    We then iterate through this list and build a pareto from this. We know this takes $O(n)$ since they are sorted, so 
+    it is the same operation as in Algorithm \ref{alg:pareto}
+
+
+    \begin{algorithm}
+        \caption{Chan Pareto}
+        \label{alg:chan_pareto}
+        \begin{algorithmic}[1]
+        \Function{ChanPareto}{$P$}
+            \State divide $P$ into $P_1, P_2, ... P_{n/h}$ where $|P_i| = h$
+            \State Solve each $P_i$ using Algorithm \ref{alg:pareto} and store paretos in $S_i$
+            \State merge paretos $S_i$ in sorted $x$ order into $P'$
+            \State push $p'_1$ onto stack $S$
+            \For{$i \gets 2,..., n$}
+                \While{$|S| \geq 1$ and $p'_{i,y} \geq S[top]_y$}
+                    \State pop $S$
+                \EndWhile
+                \State push $p'_i$ onto $S$
+            \EndFor
+            \State \textbf{return} S
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
 
 \end{enumerate}
 
