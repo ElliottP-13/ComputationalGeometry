@@ -8,6 +8,8 @@
 \rhead{Homework 1}
 \lhead{Elliott Pryor}
 
+\graphicspath{{./}{images/}}
+
 
 \makeatletter
 \def\mathcolor#1#{\@mathcolor{#1}}
@@ -19,11 +21,33 @@
 }
 \makeatother
 
+\newcommand{\pareto}[1]{\rm{Pareto}(#1)}
+\newcommand{\conv}[1]{\rm{conv}(#1)}
+
 \begin{document}
 \maketitle
 
 \problem{1}
-% Copy from Millman tex source when posted
+Let $P = \{ p_1, \ldots, p_n \}$ and $P' = \{ p_1', \ldots, p_n' \}$ be the
+vertex sets of two upper hulls in the plane.  Each set is presented as a
+sequence of points sorted from left to right.  Let $p_i = (x_i, y_i)$ and $p_j'
+= (x_j', y_j')$ denote the point coordinates.  We assume that $P$ lies entirely
+to the left of $P'$, meaning that there exists a value $z$ such that for all
+$i$ and $j$, $x_i < z < x_j'$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{tangents}
+    \caption{Problem 1: Computing the upper tangent of two hulls}
+\end{figure}
+
+Present an $O(\log n)$-time algorithm which, given $P$ and $P'$, compute the two
+points $p_i \in P$ and $p_j' \in P'$ such that their common support line passes
+through these two points.
+
+Briefly justify your algorithm's correctness and drive its running time.  ({\bf
+Hint:} The correctness proof involves a case analysis.  Please be careful, a
+poorly drawn figure may lead to an incorrect hypothesis.)
 \hrule
 
 Some sort of binary search. 
@@ -87,6 +111,45 @@ Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Th
 
 
 \problem{2}
+
+Consider a set $P = \{p_1, \ldots, p_n \}$ of points in the plane, where $p_i =
+(x_i, y_i)$. A \emph{Pareto set} for $P$, denoted $\pareto{P}$, (named after
+the Italian engineer and economist Vilfredo Pareto), is a subset of points
+$p_i$ such that there is no $p_j \in P (j \neq i)$ such that $x_j \geq x_i$ and
+$y_j \geq y_i$.  That is, each point of $\pareto{P}$ has the property that
+there is no point of $P$ that is both to the right and above it.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{pareto}
+    \caption{Problem 2: Pareto set}
+\end{figure}
+
+Pareto sets and convex hulls in the plane are similar in many respects.  In
+this problem we will explore some of these connections.
+
+\begin{enumerate}
+
+\item (5 points) A point $p$ lies on the convex hull of a set $P$ if and only if there is
+a line passing though $p$ such that all the points of $P$ lie on one side of
+this line.  Provide an analogous assertion for the points of $\pareto{P}$ in
+terms of a different shape.
+
+\item (5 points) Devise an analogue of Graham's convex-hull algorithm for computing
+\pareto{P} in $O(n \log n)$ time.  Briefly justify your algorithm's correctness
+and derive its running time.  (You do not need to explain the algorithm ``from
+scratch'', that is, you can explain with modifications would be made to Grahm's
+algorithm.)
+
+\item (5 points) Devise an analogue of the Jarvis march algorithm for computing
+$\pareto{P}$ in $O(h \cdot n)$ time, where $h$ is the cardinality of
+$\pareto{P}$.  (As with the previous part, you can just explain the differences
+with Jarvis's algorithm.)
+
+\item (5 points) Devise an algorithm for computing $\pareto{P}$ in $O(n
+\log h)$ time, where $h$ is the cardinality of $\pareto{P}$.
+
+\end{enumerate}
 
 \hrule
 
@@ -185,6 +248,16 @@ Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Th
 
 \problem{3}
 
+Assume you have an orientation test available which can determine in constant
+time whether three points make a left turn (i.e., the third point lies on the
+left of the oriented line described by the first two points) or a right turn.
+Now, let a point $q$ and a convex polygon $P = \{ p_1, \ldots , p_n \}$ in the
+plane be given, where the points of $P$ are stored in an array in
+counter-clockwise order around $P$ and $q$ is outside of $P$. Give pseudo-code
+to determine the tangents from $q$ to $P$ in $O(\log n)$ time.
+
+\hrule
+
 We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn), and $Orient(a,b,c) < 0$ if it is oriented clockwise (right turn)
 
 \begin{algorithm}
@@ -193,21 +266,28 @@ We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn)
     \begin{algorithmic}[1]
     \Function{Tangent}{$a, P$}
         \State Binary search to find point of tangency
-        \State $low \gets 0$
+        \State $low \gets 1$
         \State $high \gets |P|$
         \State $p_1$, $p_2$
         \While{!found}
             \State $c \gets \lceil (low + high)/2 \rceil$
-            \State $b \gets c-1, \sp d \gets c + 1$ \quad b is point counter-clockwise from a, d is point clockwise from a
+            \State $b \gets c-1, \sp d \gets c + 1$ \quad \textcolor{red}{b is point counter-clockwise from a, d is point clockwise from a}
             \If{$Orient(a, c, b) = Orient(a, c, d)$}
-                \State found tangent
+                \State found tangen$t$
                 \State $p_1 \gets m$
                 \State \textbf{break while}
+            \ElsIf{orientations at $c$, $low$, $high$, all match}
+                \color{red}
+                \State this catches if both tangents are on one side of $c$, 
+                \State so we need to go around so we don't get stuck on $low$, or $high$
+                \State move in opposite direction of $Orient(a, c, low)$ and adjust $low, high$ accordingly 
+                \State (same as lower rules).
+                \color{black}
             \ElsIf{$Orient(a,c,b) > 0$ and $Orient(a,c,d) < 0$}
-                \State Need to move search point left (counter-clockwise)
+                \State \textcolor{red}{Need to move search point left (counter-clockwise)}
                 \State $high \gets b$
             \ElsIf{$Orient(a,c,b) < 0$ and $Orient(a,c,d > 0)$}
-                \State need to move search point right (clockwise)
+                \State \textcolor{red}{need to move search point right (clockwise)}
                 \State $low \gets d$
             \EndIf
         \EndWhile
@@ -219,5 +299,67 @@ We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn)
 \end{algorithm}
 
 
+
+
+\problem{4}
+
+Given a set $S$ of $n$ points in the plane, consider the subsets
+
+\begin{eqnarray*}
+	S_1 &=& S, \\
+	S_2 &=& S_1 \setminus \{ \text{set of vertices of } \conv{S_1} \} \\
+		&\ldots& \\
+	S_i &=& S_{i-1} \setminus \{ \text{set of vertices of } \conv{S_{i-1}} \}
+\end{eqnarray*}
+%
+until $S_k$ has at most three elements.  Give an $O(n^2)$ time algorithm that
+computes all convex hull $\conv{S_1}, \conv{S_2}, \ldots, S_k$.  [Extra credit,
+provide an algorithm that is faster than $O(n^2)$].
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.25\textwidth]{onions}
+    \caption{Problem 4: Onion peeling}
+\end{figure}
+\hrule
+
+We essentially do Grahm's Scan, but instead of popping and removing them,
+we move the popped hull sections down one layer.
+
+\begin{algorithm}
+    \caption{Onion Problem}
+    \label{alg:onion}
+
+    \begin{algorithmic}[1]
+        \Function{recurr}{$p', S$}
+            \State popped = []
+            \While{$|S| \leq 2$ and $Orient(p', S[top], S[top-1]) < 0$}
+                \State popped.append($S.pop()$)
+            \EndWhile
+            \State \textbf{return} popped
+        \EndFunction
+        \end{algorithmic}
+
+    \begin{algorithmic}[1]
+    \Function{Onions}{$P$}
+        \State sort $P$ by increasing $x$
+        \State push $p_1, p_2$ onto stack $S_0$
+        \For{$i \gets 3, ..., n$}
+            \State \textcolor{red}{Variable initialization to clean things up}
+            \State $S \gets S_0$ 
+            \State $add\_to\_next \gets [p_i]$ \quad \textcolor{red}{mark $p_i$ to be added to S}
+            \State $popped \gets recurr(p_i,S)$ \quad \textcolor{red}{get points removed from S}
+            \While{$popped$ is not empty}
+                \State $S.push(add\_to\_next)$ \quad \textcolor{red}{add the points to this shell}
+                \State $add\_to\_next \gets popped$
+                \State $p' \gets popped[top]$
+                \State $S \gets$ next layer down stack
+                \State $popped \gets recurr(p', S)$
+            \EndWhile
+            \State $S.push(add\_to\_next)$ \quad \textcolor{red}{Add to last layer}
+        \EndFor
+    \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 \end{document}
