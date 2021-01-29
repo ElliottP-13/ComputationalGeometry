@@ -2,7 +2,8 @@
 \usepackage{../EllioStyle}
 
 \title{Homework 1}
-\author{Elliott Pryor}
+\author{Elliott Pryor\\
+Worked with: Nathan Stouffer}
 \date{24 Jan 2021}
 
 \rhead{Homework 1}
@@ -62,26 +63,29 @@ Idea: Start at $a$ compute point $b \in P'$ tangent to $a$ (O (log n)).
 Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Then done????
 
 \begin{algorithm}
-    \caption{Tangent Function}
+    \caption{Upper Tangent Function}
     \label{alg:prob1}
     \begin{algorithmic}[1]
-    \Function{Tangent}{$a, P$}
-        \State Binary search to find point of tangency
+    \Function{PeakFinder}{$a, P$}
+        \State \textcolor{red}{Binary search to find maximum}
         \State $low \gets 0$
         \State $high \gets |P|$
         \While{!found}
             \State $m \gets \lceil (low + high)/2 \rceil$
-            \State $line \gets \overrightarrow{a,m}$
-            \If{$line([m + 1]_x) > [m + 1]_y$ and $line([m - 1]_x) > [m - 1]_y$  }
-                \State found it (is supporting line)
-                \State \textbf{return} m
-            \ElsIf{$line([m + 1]_x) > [m + 1]_y$}
-                \State line intersects some point before m (tangent point to left)
+            \State $s_1 \gets $ slope of line between $m-1, m$
+            \State $s_2 \gets $ slope of line between $m, m+1$
+            
+            \If{$s_1 > 0$ and $s_2 < 0$}
+                \State \textcolor{red}{found peak, slopes make a $\wedge$ at point m}
+                \State \textbf{return} $m$
+            \ElsIf{$s_1 > 0$ and $s_2 > 0$}
+                \State \textcolor{red}{Increasing on both sides, need to go more clockwise (right)}
                 \State $high \gets m - 1$
-            \ElsIf{$line([m - 1]_x) > [m - 1]_y$}
-                \State line intersects some point after m (tangent point to right)
+            \ElsIf{$s_1 < 0$ and $s_2 < 0$}
+                \State \textcolor{red}{Decreasing on both sides, need to go more counter-clockwise (left)}
                 \State $low \gets m + 1$
             \EndIf
+            
         \EndWhile
     \EndFunction
     \end{algorithmic}
@@ -190,6 +194,22 @@ with Jarvis's algorithm.)
         \end{algorithmic}
     \end{algorithm}
 
+    \textbf{Correctness:} We show that algorithm \ref{alg:pareto} is correct by induction. 
+    A pareto front is at least one point, so initialization is trivially true.
+
+    We assume that the points on the stack are the pareto front for the first $i-1$ points in $P$.
+
+    Then, we consider point $p_i$. We have two cases. If $p_{i,y} < S[top]_y$ then, since points are in sorted $x$ order,
+    $p$ is not in the corner of any of the points of $S$, and none of the points of $S$ are in the corner of $p$. Thus, $S \cup p$
+    is the pareto front for the first $i$ points.
+
+    Second, if $p_{i,y} \geq S[top]_y$, then $S[top]$ is in the corner of $p$ (since in sorted $x$ order). Then,
+    $S$ gets popped (all popped points meet the above condition) until $|S| < 1$ or $S[top]_y > p_{i,y}$. Thus only points in the corner of $p_i$
+    were popped, so are not on the pareto front. Now our stack either has size $1$ from pushing $p$ and is trivially a pareto front. 
+    Or it is a valid pareto front for the first $i$ points since it now meets the first condition.
+
+    Thus at the end of the loop, $S$ is a valid pareto front for the first $n$ datapoints, and is thus a valid pareto.
+
     \item Our modified Jarvis march algorithm would search for the point with the greatest $y$ value.
     Then it would loop and search for the point with the next greatest y-coordinate to the right of the previous point ($p_{i,x} > p_{i-1,x}$).
     This loop is repeated $h - 1$ times (the first point was found in initialization step of finding point with largest y-coordinate).
@@ -209,15 +229,20 @@ with Jarvis's algorithm.)
         \end{algorithmic}
     \end{algorithm}
 
+    \textbf{Correctness:} The point with the maximum $y$ value must be a part of the pareto. So at initialization we find the point.
+    We then search for the next greatest point to the right of this. This point is also part of the pareto. 
+    We repeat this $h$ times to find the $h$ points with greatest $y$ value to the right of the previous point. 
+
     \item We start by dividing $P$ into $n/h$ sets of size $h$. 
     We run Pareto Scan (Algorithm \ref{alg:pareto}) on each of the $n/h$ sets.
     The runtime of this step is $O(h \log(h))$ repeated $n/h$ times: $O(n \log (h))$.
 
-    We can then merge these in $O(n)$ time. We know that each pareto front found is at most $h$ long.
-    We merge these fronts in sorted order by $x$. This takes $O(n)$ this is the same as merge operation in MergeSort.
-    We then iterate through this list and build a pareto from this. We know this takes $O(n)$ since they are sorted, so 
-    it is the same operation as in Algorithm \ref{alg:pareto}
+    We can then merge these in $O(n)$ time. We examine this in a 2D matrix. Each row is an individual pareto, and they are all at most $h$ long.
+    The algorithm explores this entire matrix, which is $n/h \times h$. So covering this entire matrix takes $O(n/h \cdot h) = O(n)$ time.
 
+    We can also arrive at this an alternative way. Line 3 takes $O(n \log (h))$. Then the for loop is run $h$ times.
+    Line 7 and 8 both take $O(n/h)$ time since they go through each mini-pareto once. Line 9 is constant time.
+    So the for loop takes $O(h \cdot n/h) = O(n)$.
 
     \begin{algorithm}
         \caption{Chan Pareto}
@@ -226,18 +251,28 @@ with Jarvis's algorithm.)
         \Function{ChanPareto}{$P$}
             \State divide $P$ into $P_1, P_2, ... P_{n/h}$ where $|P_i| = h$
             \State Solve each $P_i$ using Algorithm \ref{alg:pareto} and store paretos in $S_i$
-            \State merge paretos $S_i$ in sorted $x$ order into $P'$
-            \State push $p'_1$ onto stack $S$
-            \For{$i \gets 2,..., n$}
-                \While{$|S| \geq 1$ and $p'_{i,y} \geq S[top]_y$}
-                    \State pop $S$
-                \EndWhile
-                \State push $p'_i$ onto $S$
+            \State index $\gets$ list of $n/h$ ones. 
+            \State initilize stack $S$
+            \For{$1, ... h$}
+                \State find point $p$ with largest $y$ coordinate along the indicies ($S_i[index[i]]$)
+                \State Go through paretos along indicies and increment index if point $S_i[index[i]]$ is in corner of $p$
+                \State push $p$ onto $S$
             \EndFor
             \State \textbf{return} S
         \EndFunction
         \end{algorithmic}
     \end{algorithm}
+
+    \textbf{Correctness:} We know that each mini-pareto is correct since Algorithm \ref{alg:pareto} is correct.
+    So we need to show that the merge operation is correct. We know that points on the pareto are part of the mini paretos. 
+    By induction, we start with an empty set which is vacuously true. Then we assume that we have the first $i-1$ points of the pareto. 
+    And that $index[i]$ points to the largest uncovered point in pareto $S_i$. 
+
+    We show that this holds after the $i^{th}$ iteration. To do this, we show that the point $p$ with the largest $y$ coordinate is part of the pareto.
+    By our choice of $p$, it is certainly not covered by any of the points on $S_i[index[i]]$. Thus, we show that it is also not covered by any previous point, or future point.
+    By the inductive assumption, $p$ is not covered by any of the points in $S$. 
+    Then, suppose that $p$ is covered by a future point $p_j$, that future point would also cover $S_j[index[j]]$. Then $S_j$
+    would not be a valid pareto, a contradiction. So $p$ belongs on the pareto. 
 
 
 \end{enumerate}
@@ -277,12 +312,10 @@ We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn)
                 \State $p_1 \gets m$
                 \State \textbf{break while}
             \ElsIf{orientations at $c$, $low$, $high$, all match}
-                \color{red}
-                \State this catches if both tangents are on one side of $c$, 
-                \State so we need to go around so we don't get stuck on $low$, or $high$
+                \State \textcolor{red}{this catches if both tangents are on one side of $c$}, 
+                \State \textcolor{red}{so we need to go around so we don't get stuck on $low$, or $high$}
                 \State move in opposite direction of $Orient(a, c, low)$ and adjust $low, high$ accordingly 
-                \State (same as lower rules).
-                \color{black}
+                \State \textcolor{red}{(same as lower rules)}
             \ElsIf{$Orient(a,c,b) > 0$ and $Orient(a,c,d) < 0$}
                 \State \textcolor{red}{Need to move search point left (counter-clockwise)}
                 \State $high \gets b$
