@@ -350,6 +350,8 @@ This means that if we listen to the normal rules in the other else if statements
 This case occurs when all 3 points are on one 'face', so we know that we will get trapped moving towards them.
 So we move in the opposite direction. This will eventually put c in between the two tangents and the algorithm will work normally.
 
+This statement can be avoided if you can find better starting and ending points such that this does not occur.
+I do not know how to pick these points in $O(\log (n))$ time, but supposing we had a method that would be better.
 
 \problem{4}
 
@@ -418,6 +420,7 @@ There are at most $O(n)$ shells. So it takes $O(n^2)$ time.
 
 \textbf{Correctness:} We prove this inductively on each shell. So considering just the outer shell,
 we have the exact same as Graham's Scan algorithm, so it is correct. 
+The inner hulls are also correct since Grahm's Scan is run on each of them.  
 
 Then for each of the lower shells, we take a convex shell segment and add it to the lower shell. 
 We show that the shell segment gets added in its entirity.
@@ -430,7 +433,6 @@ Then suppose that some point that was popped, should be added partially through 
 This is a contradiction since we are building the upper hull and the points are in sorted order. So any popped point has
 $x < p_x$. If we add the popped point back, the sorted $x$ ordering is broken a contradiction.
 
-The inner hulls are also correct since Grahm's Scan is run on each of them.  
 
 
 
