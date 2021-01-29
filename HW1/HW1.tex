@@ -296,7 +296,7 @@ to determine the tangents from $q$ to $P$ in $O(\log n)$ time.
 We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn), and $Orient(a,b,c) < 0$ if it is oriented clockwise (right turn)
 
 \begin{algorithm}
-    \caption{Tangent Function}\label{guests}
+    \caption{Tangent Function}
     \label{alg:prob1}
     \begin{algorithmic}[1]
     \Function{Tangent}{$a, P$}
@@ -376,6 +376,9 @@ provide an algorithm that is faster than $O(n^2)$].
 We essentially do Grahm's Scan, but instead of popping and removing them,
 we move the popped hull sections down one layer.
 
+So for the runtime, the sort operation takes $O(n \log (n))$. Then at worst case, every single point gets sifted down every shell. 
+There are at most $O(n)$ shells. So it takes $O(n^2)$ time.
+
 \begin{algorithm}
     \caption{Onion Problem}
     \label{alg:onion}
@@ -408,8 +411,27 @@ we move the popped hull sections down one layer.
             \EndWhile
             \State $S.push(add\_to\_next)$ \quad \textcolor{red}{Add to last layer}
         \EndFor
+        \State repeat to make the lower hull.
     \EndFunction
     \end{algorithmic}
 \end{algorithm}
+
+\textbf{Correctness:} We prove this inductively on each shell. So considering just the outer shell,
+we have the exact same as Graham's Scan algorithm, so it is correct. 
+
+Then for each of the lower shells, we take a convex shell segment and add it to the lower shell. 
+We show that the shell segment gets added in its entirity.
+
+Suppose not, suppose the entire shell segment $S'$ should not be added. We say the first point in the shell segment is $p$.
+And the shell we consider is $S$. Suppose only the first portion of the shell segment can be added without breaking convexity.
+Then the remaining portion can be added without breaking convexity since the entire shell segment was convex. 
+
+Then suppose that some point that was popped, should be added partially through the segment. 
+This is a contradiction since we are building the upper hull and the points are in sorted order. So any popped point has
+$x < p_x$. If we add the popped point back, the sorted $x$ ordering is broken a contradiction.
+
+The inner hulls are also correct since Grahm's Scan is run on each of them.  
+
+
 
 \end{document}
