@@ -285,28 +285,26 @@ We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn)
         \State $low \gets 1$
         \State $high \gets |P|$
         \State $p_1$, $p_2$
-        \While{!found}
-            \State $c \gets \lceil (low + high)/2 \rceil$
+        \State $c \gets n/2$
+        \For{$i \gets 1, ..., \log (n) + 1$}
+            \State $c \gets c \mod n$
+            \State $increment \gets \lceil \frac{n}{2^i} \rceil$
+            \State $i \gets i + 1$
             \State $b \gets c-1, \sp d \gets c + 1$ \quad \textcolor{red}{b is point counter-clockwise from a, d is point clockwise from a}
             \If{$Orient(a, c, b) = Orient(a, c, d)$}
                 \State found tangen$t$
                 \State $p_1 \gets c$
-                \State \textbf{break while}
-            \ElsIf{orientations at $c$, $low$, $high$, all match}
-                \State \textcolor{red}{this catches if both tangents are on one side of $c$}, 
-                \State \textcolor{red}{so we need to go around so we don't get stuck on $low$, or $high$}
-                \State move in opposite direction of $Orient(a, c, low)$ and adjust $low, high$ accordingly 
-                \State \textcolor{red}{(same as lower rules)}
+                \State \textbf{break for}
             \ElsIf{$Orient(a,c,b) > 0$ and $Orient(a,c,d) < 0$}
                 \State \textcolor{red}{Need to move search point left (counter-clockwise)}
-                \State $high \gets b$
+                \State $c \gets c + increment$
             \ElsIf{$Orient(a,c,b) < 0$ and $Orient(a,c,d > 0)$}
                 \State \textcolor{red}{need to move search point right (clockwise)}
-                \State $low \gets d$
+                \State $c \gets c - increment$
             \EndIf
-        \EndWhile
+        \EndFor
 
-        \State Repeat same while loop but flipping inequality signs to find other tangency point.
+        \State Repeat same for loop but flipping inequality signs to find other tangency point.
         \State \textbf{return} $p_1, p_2$
     \EndFunction
     \end{algorithmic}
@@ -314,7 +312,8 @@ We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn)
 
 
 This follows a binary search. Every operation within the while loop takes $O(1)$ time. Then, the same as regular binary search,
-the algorithm jumps $(high-low)/2$ every iteration, so it covers the entire list in $O(\log (n))$ time. 
+the algorithm jumps $\lceil \frac{n}{2^i} \rceil$ every iteration, so it covers the entire list in $O(\log (n))$ time.
+This is geometric series jumps, so it jumps half the remaining distance (logarithmic).
 
 \textbf{Correctness:} 
 We use Figure \ref{fig:orientation} to justify the rules in the else if statements lines 18-23.
@@ -326,13 +325,9 @@ This shows the orientation values when we need to move clockwise and counter-clo
     \label{fig:orientation}
 \end{figure}
 
-The else if statement line 12-17 is used to catch the edge case where both tangents are on one side of our center line.
-This means that if we listen to the normal rules in the other else if statements, we may get caught and unable to pass our high or low marker. 
-This case occurs when all 3 points are on one 'face', so we know that we will get trapped moving towards them.
-So we move in the opposite direction. This will eventually put c in between the two tangents and the algorithm will work normally.
-
-This statement can be avoided if you can find better starting and ending points such that this does not occur.
-I do not know how to pick these points in $O(\log (n))$ time, but supposing we had a method that would be better.
+We know we get there in $\log(n) + 1$ iterations. Due to our step size, in $\log(n) + 1$ iterations
+we can go all the way around any shape. From Figure \ref{fig:orientation} we know that we always move in the correct direction.
+Therefore we must reach the tangency point.
 
 \problem{4}
 
