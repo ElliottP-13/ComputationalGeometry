@@ -50,63 +50,44 @@ Briefly justify your algorithm's correctness and drive its running time.  ({\bf
 Hint:} The correctness proof involves a case analysis.  Please be careful, a
 poorly drawn figure may lead to an incorrect hypothesis.)
 \hrule
+\emph{
+    This is a note. Hey Dave! Nathan Stouffer and I worked for a really long time on this (probably over 10 hours on this one alone). 
+    I am very not sure about it. But this is the best we could come up with. 
+    I would be very excited to hear about the correct solution. 
+}
 
-Some sort of binary search. 
+For this problem, we use the instructions in Figure \ref{fig:prob1}. We draw a line connecting two points, $A \in P$, $C \in P'$.
+Then depending on which of the 4 cases this falls into in the figure we move accordingly. 
+The step size is $\lceil \frac{n}{2^i} \rceil$. This (step size) eventually converges to 1. After which point we stop.
+*Note, we run this one iteration extra, so it runs for two stepsize 1 iterations if it is not tangent.
+We check tangency by orientation $A,C,B = A,C,D$ and orientation $C,A,Y= C,A,X$.
 
-Jointly search P and P'
-Pick $a \in P, \sp b \in P'$
-Want line with highest z intercept
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{prob1_alg.png}
+    \caption{Problem 1 Algorithm}
+    \label{fig:prob1}
+\end{figure}
 
-Idea: O(n) run Grahm's Scan on it. Already sorted so takes O(n) time.
-
-Idea: Start at $a$ compute point $b \in P'$ tangent to $a$ (O (log n)). 
-Then reverse, find $a$ tangent to $b$. Then forward, find $b$ tangent to $a$. Then done????
-
-\begin{algorithm}
-    \caption{Upper Tangent Function}
-    \label{alg:prob1}
-    \begin{algorithmic}[1]
-    \Function{PeakFinder}{$a, P$}
-        \State \textcolor{red}{Binary search to find maximum}
-        \State $low \gets 0$
-        \State $high \gets |P|$
-        \While{!found}
-            \State $m \gets \lceil (low + high)/2 \rceil$
-            \State $s_1 \gets $ slope of line between $m-1, m$
-            \State $s_2 \gets $ slope of line between $m, m+1$
-            
-            \If{$s_1 > 0$ and $s_2 < 0$}
-                \State \textcolor{red}{found peak, slopes make a $\wedge$ at point m}
-                \State \textbf{return} $m$
-            \ElsIf{$s_1 > 0$ and $s_2 > 0$}
-                \State \textcolor{red}{Increasing on both sides, need to go more clockwise (right)}
-                \State $high \gets m - 1$
-            \ElsIf{$s_1 < 0$ and $s_2 < 0$}
-                \State \textcolor{red}{Decreasing on both sides, need to go more counter-clockwise (left)}
-                \State $low \gets m + 1$
-            \EndIf
-            
-        \EndWhile
-    \EndFunction
-    \end{algorithmic}
-
-    \begin{algorithmic}[1]
-        \Function{UpperTangent}{$P, P'$}
-            \State Run Tangent 3 times to find upper tangent.
-            \State $a \gets |P|/2$ \quad // Random point in $P$
-            \State $b \gets Tangent(a, P')$ \quad // So we can 'see' $p_i$ from $b$
-            \State $a \gets Tangent(b, P)$ \quad // Finds $p_i$
-            \State $b \gets Tangent(a, P')$ \quad // Finds $p_j$
-            \State \textbf{return} $\overrightarrow{a,b}$
-        \EndFunction
-        \end{algorithmic}
-
-\end{algorithm}
+Running time: The step size is logarithmic. So it will converge in $O(\log (n))$.
+Due to our termination condition, it runs for $log(n) + 1$ iterations. During each iteration,
+it performs only constant time operations. Thus the running time $O(1+ \log(n)) = O(\log(n))$.
 
 
+\textbf{Correctness}: No matter what case we are in, we always move the points $A,C$ towards the target. 
+Imagine the scenario where step size is fixed at 1. It will eventually reach the target points.
+Thus the rules are correct.
 
+Since we have no way of knowing we have the right points until the end, it is possible that we have it, and move off of this point by $\lceil \frac{n}{2^i} \rceil$.
+But this is bad you may say! Since we always move towards the target point, and we step at $\lceil \frac{n}{2^i} \rceil$,
+we will end up after $\log (n)$ within 1 point of the correct target. 
 
+Examine the worst case where we step off the point on the first iteration, so we are $n/2$ away.
+We approach this point each iteration, so our distance away is $n/2 - n/4 - n/8 - ... - n/2^i - ... 1$.
+By geometric series this is 1. Thus we can run our algorithm 1 iteration more (constant time) in order to reach the target.
 
+Also if $n$ is not a power of 2, it is possible to overshoot by the ceil operator. We can either add filler points on lines,
+or we know that we always move in the right direction, so if we overshoot we switch directions and head back towards the target as desired.
 
 
 
@@ -309,7 +290,7 @@ We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn)
             \State $b \gets c-1, \sp d \gets c + 1$ \quad \textcolor{red}{b is point counter-clockwise from a, d is point clockwise from a}
             \If{$Orient(a, c, b) = Orient(a, c, d)$}
                 \State found tangen$t$
-                \State $p_1 \gets m$
+                \State $p_1 \gets c$
                 \State \textbf{break while}
             \ElsIf{orientations at $c$, $low$, $high$, all match}
                 \State \textcolor{red}{this catches if both tangents are on one side of $c$}, 
