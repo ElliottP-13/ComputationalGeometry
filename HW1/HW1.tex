@@ -332,6 +332,23 @@ We say $Orient(a,b,c) > 0$ if it is oriented counter clockwise (makes left turn)
 \end{algorithm}
 
 
+This follows a binary search. Every operation within the while loop takes $O(1)$ time. Then, the same as regular binary search,
+the algorithm jumps $(high-low)/2$ every iteration, so it covers the entire list in $O(\log (n))$ time. 
+
+\textbf{Correctness:} 
+We use Figure \ref{fig:orientation} to justify the rules in the else if statements lines 18-23.
+This shows the orientation values when we need to move clockwise and counter-clockwise.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{prob_3_correctness.png}
+    \caption{Orientation Rules Justification and example}
+    \label{fig:orientation}
+\end{figure}
+
+The else if statement line 12-17 is used to catch the edge case where both tangents are on one side of our center line.
+This means that if we listen to the normal rules in the other else if statements, we may get caught and unable to pass our high or low marker. 
+This case occurs when all 3 points are on one 'face', so we know that we will get trapped moving towards them.
+So we move in the opposite direction. This will eventually put c in between the two tangents and the algorithm will work normally.
 
 
 \problem{4}
