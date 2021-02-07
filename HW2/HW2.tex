@@ -90,10 +90,42 @@ enough to justify the $O(n)$ runtime clearly.
 
 
 
+\begin{algorithm}
+    \caption{Find what face Point is in}
+    \label{alg:point}
+    \begin{algorithmic}[1]
+    \Function{FindFace}{$p$}
+        \State $e \gets f.incident\_edge$ $f$ is a random face
+        \While{$e$ is not visited}
+            \State mark $e$ as visited
+            \State $o \gets Orientation(e.origin, e.dest, p)$
+            \If $o$ is counter clockwise
+                \State \textcolor{red}{Move counter clockwise}
+                \State $e \gets e.next$
+            \ElsIf $o$ is clockwise
+                \State \textcolor{red}{Move clockwise}
+                \State $e \gets e.twin.prev.twin$
+            \EndIf
+        \EndWhile
+        \State \textcolor{red}{We came all the way around a face in a circle}
+        \State $o \gets Orientation(e.origin, e.dest, p)$
+        \If $o$ is counter clockwise
+            \State \textcolor{red}{On inner face}
+            \State \textbf{return: } $e.left$
+        \ElsIf $o$ is clockwise
+            \State \textcolor{red}{On outer face}
+            \State \textbf{return: } $e.right$
+        \EndIf
+    \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 
-
-
+\begin{figure}[h]
+    \centering
+    \includegraphics[width = 0.65\textwidth]{prob2_move}
+    \caption{Problem 2: Demonstration of movement (e.twin.prev.twin is clockwise and end-to-end)}
+\end{figure}
 
 
 \problem{3}
