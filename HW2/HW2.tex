@@ -95,27 +95,24 @@ enough to justify the $O(n)$ runtime clearly.
     \label{alg:point}
     \begin{algorithmic}[1]
     \Function{FindFace}{$p$}
-        \State $e \gets f.incident\_edge$ $f$ is a random face
-        \While{$e$ is not visited}
-            \State mark $e$ as visited
-            \State $o \gets Orientation(e.origin, e.dest, p)$
-            \If $o$ is counter clockwise
-                \State \textcolor{red}{Move counter clockwise}
+        \For{face $\in$ Faces}
+            \State $start \gets face.incident\_edge$
+            \State $e \gets start$
+            \State $intersections \gets 0$
+            \Do
+                \State $origin \gets e.origin$, $destination \gets e.twin.origin$
+                \State $l \gets$ line through edge $e$
+                \State $i \gets $ point where $l(x) = p_y$ \textcolor{red}{point where line interesects y level of point}
+                \If{$i.x \geq p.x$ and $i.x \in [origin.x, destination.x]$}
+                    \State \textcolor{red}{Found an intersection!}
+                    \State increment $intersections$
+                \EndIf
                 \State $e \gets e.next$
-            \ElsIf $o$ is clockwise
-                \State \textcolor{red}{Move clockwise}
-                \State $e \gets e.twin.prev.twin$
+            \doWhile{$e \neq start$}
+            \If {$intersections \mod  2 = 1$}
+                \State \textbf{return} face
             \EndIf
-        \EndWhile
-        \State \textcolor{red}{We came all the way around a face in a circle}
-        \State $o \gets Orientation(e.origin, e.dest, p)$
-        \If $o$ is counter clockwise
-            \State \textcolor{red}{On inner face}
-            \State \textbf{return: } $e.left$
-        \ElsIf $o$ is clockwise
-            \State \textcolor{red}{On outer face}
-            \State \textbf{return: } $e.right$
-        \EndIf
+        \EndFor
     \EndFunction
     \end{algorithmic}
 \end{algorithm}
