@@ -12,6 +12,8 @@ Collaborated with: Nathan Stouffer}
 \graphicspath{{./}{images/}}
 
 
+
+
 \makeatletter
 \def\mathcolor#1#{\@mathcolor{#1}}
 \def\@mathcolor#1#2#3{%
@@ -199,6 +201,25 @@ If the event is a left-endpoint of a circle, we split the circle into two semi c
 
 The algorithm terminates once an intersection is found, so at worst case it takes $O(n \log n)$ time to determine no intersection,
 since there are $2n \in O(n)$ events taking $O(\log n)$ time.
+
+
+\textbf{Correctness: } We show the same lemma as in the straight line segment sweepline algorithm.
+
+\begin{lemma}
+    Let $S$ be the set of our circles. Consider $S_i, S_j \in S$ that intersect at $p$.
+    Then, $S_i, S_j$ are adjacent on the sweepline prior to event at $p_x$
+\end{lemma}
+
+\begin{proof}
+    Consider a line $l$ infinitesimally left of $p$. By general position assumptions, 
+    no three circles intersect at same point, and no circles intersect at left/right endpoint.
+    Thus $S_i, S_j$ are adjacent on sweepline at $l$
+
+    Consider $q$ (event point) with largest $x$ coordinate smaller than $p$.
+    Then there are no events between $q$ and $p$. Thus the order on the sweepline does not change between $q$ and $p$.
+    Therefore, after processing $q$, $S_i, S_j$ are adjacent on the sweepline.
+\end{proof}
+
 
 \problem{4}
 
