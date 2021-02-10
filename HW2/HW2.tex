@@ -119,7 +119,7 @@ We then do this for all the faces until we find one that it is in.
                 \EndIf
                 \State $e \gets e.next$
             \doWhile{$e \neq start$}
-            \If {$intersections \mod  2 = 1$}
+            \If {$intersections$ is odd}
                 \State \textbf{return} face
             \EndIf
         \EndFor
@@ -128,7 +128,28 @@ We then do this for all the faces until we find one that it is in.
 \end{algorithm}
 
 
-\textbf{Correctness: } TODO
+\textbf{Correctness: } We first show that a point is inside a polygon if and only if a ray in the +x direction 
+intersects the edges an odd number of times. 
+
+\begin{proof}
+    
+    Let $r$ be a ray in the $+x$ direction originating at $p$. Let $P$ be a bounded polygon. 
+    Crossing $P$ refers to crossing the boundary of $P$, and $\in P$ refers to inside the region bounded by $P$.
+
+    Forward Direction: Assume that $p$ is inside $P$ then we show that it interesects an odd number of times.
+    Since, $p \in P$ then certainly the ray crosses the boundary of $P$ at least once. Then if $r$ enters $P$,
+    it certainly had to of first left it. So there is a parity. It must cross once to leave, and once to return (2).
+    But since it is bounded, it will eventually cross to leave without entering. Thus the number of intersections is odd.
+
+    Reverse Direction: Assume that the number of times $r$ crosses $P$ an odd number of times, then we show $p \in P$.
+    Since the number of intersections is odd, then the ray either entered $P$ and never left,
+    or left $P$ without first entering. The first case is impossible since $P$ is bounded. 
+    Then, the only way for the second case to occur is if $p \in P$
+\end{proof}
+
+Thus we can correctly determine if the point is inside a polygon. In the algorithm, we consider each face which is a bounded polygon (or can be made bounded artificially without affecting anything).
+We go around each edge of the polygon, checking for intersections. So if we select the correct face (randomly) we will correctly
+determine if the point is inside. We check all faces. So we will correctly determine which face a point is in.
 
 \textbf{Running Time: } 
 The algorithm considers each edge in a face exactly once. Then at worst case the algorithm has to examine
@@ -197,7 +218,8 @@ Then at each event: we update the y value of adjacent semi-circles.
 We then check if intersection: $O(1)$. Then if an intersection is found, we return the two circles.
 
 If the event is a left-endpoint of a circle, we split the circle into two semi circles and add them to the dict.
-($O(\log n)$). If the event is a right end point, we delete the two semi circles ($O(\log n)$)
+($O(\log n)$). We also add the upper half semicircle above the lower semicircle in the dict even though both have same initial y coordinate.
+If the event is a right end point, we delete the two semi circles ($O(\log n)$)
 
 The algorithm terminates once an intersection is found, so at worst case it takes $O(n \log n)$ time to determine no intersection,
 since there are $2n \in O(n)$ events taking $O(\log n)$ time.
@@ -220,6 +242,7 @@ since there are $2n \in O(n)$ events taking $O(\log n)$ time.
     Therefore, after processing $q$, $S_i, S_j$ are adjacent on the sweepline.
 \end{proof}
 
+Therefore, we only need to check adjacent semi-circles on the sweepline
 
 \problem{4}
 
