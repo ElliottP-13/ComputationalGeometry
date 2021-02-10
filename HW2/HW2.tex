@@ -102,7 +102,7 @@ enough to justify the $O(n)$ runtime clearly.
             \Do
                 \State $origin \gets e.origin$, $destination \gets e.twin.origin$
                 \State $l \gets$ line through edge $e$
-                \State $i \gets $ point where $l(x) = p_y$ \textcolor{red}{point where line interesects y level of point}
+                \State $i \gets $ point where $l(x) = p_y$ \textcolor{red}{point where line interesects y level of p}
                 \If{$i.x \geq p.x$ and $i.x \in [origin.x, destination.x]$}
                     \State \textcolor{red}{Found an intersection!}
                     \State increment $intersections$
@@ -118,11 +118,6 @@ enough to justify the $O(n)$ runtime clearly.
 \end{algorithm}
 
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width = 0.65\textwidth]{prob2_move}
-    \caption{Problem 2: Demonstration of movement (e.twin.prev.twin is clockwise and end-to-end)}
-\end{figure}
 
 
 \problem{3}
@@ -156,7 +151,18 @@ whatever general-position assumptions you like.
 \hrule
 
 
+So the strategy is to split the circles into two semi circles and treat them individually.
+This runs essentially the same as the original line-sweep algorithm for line segments.
+The intersection computation is harder since they are not lines, but it can be done in constant time since we have formulas for semi-circles.
 
+\begin{enumerate}[(1)]
+    \item The sweepline status stores the semi-circular curves.
+        These are stored in a dictionary (balanced tree) and are sorted by the y coordinate.
+    \item Our events are the endpoints (left and right) of every circle. 
+    Then, at runtime, when a new event occurs curve intersection is computed between adjacent 
+    two semi-circles. If they intersect, a new event is placed at the intersection location. 
+    These events are stored in a priority queue. 
+\end{enumerate}
 
 
 
