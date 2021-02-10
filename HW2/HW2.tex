@@ -2,7 +2,8 @@
 \usepackage{../EllioStyle}
 
 \title{Homework 2}
-\author{Elliott Pryor}
+\author{Elliott Pryor \\
+Collaborated with: Nathan Stouffer}
 \date{11 Feb 2021}
 
 \rhead{Homework 2}
@@ -89,6 +90,13 @@ enough to justify the $O(n)$ runtime clearly.
 \hrule
 
 
+We start by drawing a ray in the +x direction originating at $p$.
+We then pick any face and walk around all the edges. We count the number of times
+the ray intersects any edge. If this is even, then the point is not inside, otherwise it is inside.
+Note this only works if we assume that the point $p$ is not in any region unbounded along the $x$ axis.
+If this is the case, we can add an imaginary edge very far away. 
+
+We then do this for all the faces until we find one that it is in.
 
 \begin{algorithm}
     \caption{Find what face Point is in}
@@ -118,7 +126,16 @@ enough to justify the $O(n)$ runtime clearly.
 \end{algorithm}
 
 
+\textbf{Correctness: } TODO
 
+\textbf{Running Time: } 
+The algorithm considers each edge in a face exactly once. Then at worst case the algorithm has to examine
+every face before finding the face the point is within. So, at worst case, the algorithm considers every edge in the graph.
+(It considers every directed edge once, or undirected edge twice).
+
+We need to determine how many edges that are considered in the algorithm.
+Since the algorithm performs constant time operations on each edge this is the driving factor.
+The number of edges is $O(n)$ with respect to number of vertices for an embedded planar graph (Euler's formula).
 
 \problem{3}
 
@@ -157,16 +174,31 @@ The intersection computation is harder since they are not lines, but it can be d
 
 \begin{enumerate}[(1)]
     \item The sweepline status stores the semi-circular curves.
-        These are stored in a dictionary (balanced tree) and are sorted by the y coordinate.
+        These are stored in a dictionary (balanced tree) and are sorted by the y coordinate (at last event location).
+        Ie. The stored y-coordinate is the starting point (left end) of the curve, or the last intersection location.
+        Also, a pointer/label of which circle a semi-circle belongs to is stored 
+        (this is used to make sure two halves of circle are not considered to intersect, and to return indicies of circles if intersecting)
+
     \item Our events are the endpoints (left and right) of every circle. 
-    Then, at runtime, when a new event occurs curve intersection is computed between adjacent 
+    Then, at event-time, when a new event occurs, curve intersection is computed between adjacent 
     two semi-circles. If they intersect, a new event is placed at the intersection location. 
     These events are stored in a priority queue. 
+
+    At event-time, the current y-position of adjacent curves is also evaluated. Then neighbors are swapped accordingly.
+    This updates the positions of curves so we have current sorted y-levels in the dict. 
 \end{enumerate}
 
 
+\textbf{Runtime and Summary: }So in summary. We add left and right end points to the event queue. 
+Then at each event: we update the y value of adjacent semi-circles. 
+($O(\log n)$ to find each one, $O(1)$ to evaluate y value, $O(\log n)$ to swap $\implies O(\log n)$)
+We then check if intersection: $O(1)$. Then if an intersection is found, we return the two circles.
 
+If the event is a left-endpoint of a circle, we split the circle into two semi circles and add them to the dict.
+($O(\log n)$). If the event is a right end point, we delete the two semi circles ($O(\log n)$)
 
+The algorithm terminates once an intersection is found, so at worst case it takes $O(n \log n)$ time to determine no intersection,
+since there are $2n \in O(n)$ events taking $O(\log n)$ time.
 
 \problem{4}
 
