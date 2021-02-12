@@ -128,8 +128,16 @@ We then do this for all the faces until we find one that it is in.
 \end{algorithm}
 
 
+
 \textbf{Correctness: } We first show that a point is inside a polygon if and only if a ray in the +x direction 
 intersects the edges an odd number of times. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.5\textwidth]{interior}
+    \caption{Example of test of points in the interior}
+    \label{fig:interior}
+\end{figure}
 
 \begin{proof}
     
