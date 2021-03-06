@@ -171,6 +171,8 @@ This hinges on the correctness that our function $f$ correctly evaluates the wid
 \end{enumerate}
 \hrule
 
+\subsection*{1. }
+
 \begin{figure}[h]
     \centering
     \begin{subfigure}{0.7 \textwidth}
@@ -227,6 +229,32 @@ $\sum_{i = 0} ^n i \cdot 2/(n-i)$. We do change of variables $j = n-i$ (intuitiv
 $$\sum_{i = 0} ^n i \cdot 2/(n-i) = \sum_{j = 0} ^n (n-j) \cdot 2/j \leq \sum_{j = 0} ^n (n) \cdot 2/j = 2n \cdot \sum_{j = 0} ^n 1/j = 2n \Theta(\ln n) = O(n \log n)$$
 
 The log factor comes from the harmonic series. But physically it comes from the probability that we have to update what edge a point is associated with.
+
+\subsection*{2. }
+
+So we get $O(n^2)$ if we have to update what edge a point is associated with every single time
+for every point. 
+
+Consider the points $(0,0), (-1, -1)$ then $p_n = (n, 1/n)$ for $n \geq 1$.
+If our initial 3 points are $(0,0),(-1,-1),(1,1)$ then every point is associated with
+edge $[(1,1), (-1,1)]$. Then when we update every point $p_j$ is then associated with $[(n,1/n), (-1,1)]$
+for $j > n$, and all the points $j \leq n$ are inside the convex hull. 
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{bad}
+    \caption{Showing the points and rays resulting in $O(n^2)$}
+\end{figure}
+
+
+
+
+
+
+
+
+
 
 
 
