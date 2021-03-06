@@ -192,8 +192,27 @@ $xy$ has been added.
 \hrule
 
 
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.3 \textwidth}
+        \includegraphics[width = \textwidth]{traps}
+        \caption{Trap map after adding segment xy}
+    \end{subfigure}
+    \begin{subfigure}{0.65 \textwidth}
+        \includegraphics[width = \textwidth]{Tree}
+        \caption{DAG after adding line segment xy}
+    \end{subfigure}
+    \caption{DAG and Tree resulting from adding segment xy}
+\end{figure}
 
 
+So the DAG became a bit of a tangled mess. I apologize. 
+
+Essentially we just add vertical lines from $x$ and $y$. 
+Then we trim the lines that we intersect with the horizontal line segment.
+Then in order to build the tree. We take the original map, and apply the 3 cases to it,
+although we only need cases 1,3. We place these in where the trapazoids A, C, D, E, and G were.
+Because we intersect them they get modified in some way.
 
 
 
