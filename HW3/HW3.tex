@@ -171,8 +171,62 @@ This hinges on the correctness that our function $f$ correctly evaluates the wid
 \end{enumerate}
 \hrule
 
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.7 \textwidth}
+        \includegraphics[width = \textwidth]{randomized_CH.png}
+        \caption{Randomized Convex Hull algorithm}
+    \end{subfigure}
+    \begin{subfigure}{0.7 \textwidth}
+        \includegraphics[width = \textwidth]{buildTent.png}
+        \caption{Subroutine `build tent' that detects what edges to replace}
+    \end{subfigure}
+    \caption{Randomized convex hull algorithm taken from 
+    \href{http://www.cs.cmu.edu/afs/cs/academic/class/15750-s17/ScribeNotes/Lecture15/lecture15.pdf}{Lecture 15 of 15-750 Graduate Algorithms at Carnegie Mellon University}}
+\end{figure}
 
+Above is the description copied from Carnegie Mellon University lecture notes.
 
+\textbf{Alg}
+We start by initializing the convex hull to be 3 random points from the point set.
+They then find some point in the interior of the convex hull: the centroid $C = \frac{P_1 + P_2 + P_3}{3}$.
+(the middle of the convex hull).
+
+Then considering a random permutation of the points, they compute an edge that is `visible' to $P_i$.
+An edge is associated with $P_i$ if ray $C, P_i$ intersects the edge. 
+Then, we build the convex hull:
+
+For each point, get the edge that is visible to it. Then check if the point is within the convex hull.
+Let $Q$ be the point where the ray $C, P_i$ intersects the visible edge. The point is inside iff $dist(C, P_i) < dist(C, Q)$.
+If $P_i$ is inside, then we don't need to do anything: move on.
+
+If $P_i$ is outside, then we run BuildTent, to compute the left and right vertices. 
+These are the vertices that are tangent to $P_i$. 
+They then delete the edges between $L, R$ and replace them with $L,P_i$ and $P_i, R$.
+Then the points that were associated with deleted edges get re-assigned to either 
+$L,P_i$ or $P_i, R$ based on the ray intersection from the initialization.
+
+\textbf{Runtime: }
+Step 1, takes $O(1)$ since we make a convex hull of fixed size 3.
+Step 2, takes $O(1)$ since we compute the centroid.
+Step 3, takes $O(n)$ since we shuffle all the points. 
+Step 4, takes $O(n)$, this is a little bit less trivial. But we know that we can check
+line intersections in $O(1)$. We then consider an edge in the convex hull, we can iterate through
+the entire list of points and check if the ray intersects the line segment in constant time. So this takes $O(n)$.
+We then only have 3 edges to consider, so $O(n)$ in total.
+So the entire initialization routine goes $O(n)$
+
+Then we use backwards analysis. We remove a random point $P_i$ from the convex hull,
+and analyze the cost of doing so. When we remove a point from the CH we must pay a cost of `undoing' the BuildTent operation.
+So we pay a cost related to the number of points whose ray intersects these two edges.
+For each point $q$ outside the CH, ray $C,q$ intersects one edge, which is defined by 2 vertices.
+So the probability that we pay the cost of $q$ by removing $P_i$ is the probability $P_i$ is one
+of these 2 vertices: or $2/|CH|$. There are at most $n-i$ vertices on the CH (every vertex that we haven't removed)
+and $i$ points outside the CH. So summing over all $i$ we get:
+$\sum_{i = 0} ^n i \cdot 2/(n-i)$. We do change of variables $j = n-i$ (intuitively $j$ is number of vertices on the CH)
+$$\sum_{i = 0} ^n i \cdot 2/(n-i) = \sum_{j = 0} ^n (n-j) \cdot 2/j \leq \sum_{j = 0} ^n (n) \cdot 2/j = 2n \cdot \sum_{j = 0} ^n 1/j = 2n \Theta(\ln n) = O(n \log n)$$
+
+The log factor comes from the harmonic series. But physically it comes from the probability that we have to update what edge a point is associated with.
 
 
 
@@ -297,7 +351,7 @@ $E = \sum_{i = 1} ^n P_i = \sum_{i = 1} ^n 1/n = \Theta(\ln (n)) = O(\log n)$ si
 Each time we enter the else statement takes $O(n)$ time since we iterate over the whole list.
 
 Thus the running time is $n + O(n \cdot \log n)$ where the first $n$ comes from the recursion depth.
-We consider the recursion depth separately since the $\log n$ factor got 'summed out'.
+We consider the recursion depth separately since the $\log n$ factor got `summed out'.
 So the overall running time is $O(n \log n)$
 
 \end{document}
