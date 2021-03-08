@@ -143,10 +143,38 @@ This hinges on the correctness that our function $f$ correctly evaluates the wid
     By Induction.
 
     Base case is at the leftmost point. We initialize $a = w^-$ and $b = 0$, so $f = w^-$
-    at the leftmost point.
+    at the leftmost point. We then show that it correctly computes the width at the next point.
+    We assume that there are no islands at the beginning, so it just needs to compute the width
+    of the channel. The rate of change in channel width is the slope of upper bank - slope of lower bank
+    Thus we have in our algorithm: $b \gets 0 + (1) (u.right - 0) + (-1)(l.right - 0) = u.right - l.right$
+    where $u$ is the event of upper bank, and $l$ is lower bank. This is the same as what we described
+    intuitively above. Therefore the base case holds and the function describes the width at the next event point.
 
-    Inductive step: assume that the width is correct at the previous event point, show that it is correct at this event point.
-    It just is IDK why is hard to prove.
+    Inductive step: assume that the function correctly computes the width up to this event point.
+    Show that it correctly computes at the next event point.
+
+    We have two cases: the first case is that this event point is not the start of an island. The second case is the event is the start of an island.
+    
+    Case 1: So we examine how the rate of change changes. It is not changing anywhere else except at the event point.
+    So we need to analyze the change at the point.
+    It is no longer changing by the rate of the left side so
+    we subtract $e.s * e.left$, and now if it is on the top of a polygon (island), it is changing by $(-1) * e.right$
+    since a positive slope means the channel is contracting. And on the bottom it is now changing by $(1) * e.right$.
+    This is just the sign $e.s$, so we add $e.s * e.right$, or $e.s * e.right - e.s *e.left = e.s(e.right - e.left)$.
+    Thus our rate of change update is correct and it correctly measures the width at the next event point.
+
+    Case 2: It is the beginning of an island. Then we just need to subtract off the wedge that is formed by the start of the island.
+    We split it up into 2 events $u, l$ where $u$ is the upper slope and $l$ is the lower slope. 
+    So $u.right > 0$ and $l.right < 0$. So we want to add $l.right$ and subtract $u.right$. So 
+    $b \gets b - u.right + l.right = b + (-1) (u.right - 0) + (1) (l.right - 0) = b + u.s (u.right - u.left) + l.s (l.right - l.left)$.
+    Since addition is associative we can do these events separately.
+    Thus, our rate of change of the width is still correct and we correctly evaluate the width at the next point.
+
+    So in both cases the rate of change is correct. Then the width at the next point is as follows.
+    width at this point + rate of change * change in x. Well that is $f(next \: e) = a + b * (next \: e_x - e_x)$.
+    Which must be the width at the next point, otherwise the change in width is not described by $b * (next \: e_x - e_x)$,
+    a contradiction since $b$ correctly describes the rate of change of width.
+
 \end{proof}
 
 
