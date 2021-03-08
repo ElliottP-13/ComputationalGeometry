@@ -174,9 +174,25 @@ This hinges on the correctness that our function $f$ correctly evaluates the wid
     width at this point + rate of change * change in x. Well that is $f(next \: e) = a + b * (next \: e_x - e_x)$.
     Which must be the width at the next point, otherwise the change in width is not described by $b * (next \: e_x - e_x)$,
     a contradiction since $b$ correctly describes the rate of change of width.
-
 \end{proof}
 
+So now that we have shown we can use our linear function to compute the width. 
+This function is a piecewise continuous function. 
+Then showing that we only need to evaluate the width at $O(n)$ points is fairly trivial.
+
+\begin{proof}
+    
+    The max or minimum of a function occur at points where the derivative changes (either 0 or DNE).
+    Our function $f$ is piecewise linear, where each piecewise component is linear.
+    If $b = 0$ then it is constant along the interval $[e.x, e_{+1}.x]$ and we can check the value at one of the endpoints.
+    If $b \neq 0$, then there is no max or min in $(e.x, e_{+1}.x)$, and we check the point where the derivative changes,
+    which is at one of the endpoints.
+
+    Thus there cannot be a max or min within $(e.x, e_{+1}.x)$, and we only need to check endpoints. 
+\end{proof}
+
+Therefore, we only need to check the width at $O(n)$ points, and our function $f$ correctly evaluates the width 
+at each point. So our algorithm will find the minimum width. 
 
 
 \problem{3}
