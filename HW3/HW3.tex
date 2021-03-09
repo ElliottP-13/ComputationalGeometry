@@ -1,5 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage{../EllioStyle}
+\usepackage{graphicx}
 
 \title{Homework 3}
 \author{Elliott Pryor \\
@@ -39,6 +40,101 @@ Show that can determine if a polygonal chain with $k$ local maxes is simple in
 $O(n \log k)$ time.
 
 \hrule
+
+We use a sweepline algorithm. But to do that, we first need to do some setup. 
+We observe, that between two maxes, there is at most 2 $x$-monotone polygonal chains.
+(Proof later). So this means, we can decompose $P$ into $2k$ $x$-monotone chains.
+Since they are $x$-monotone, they are in sorted order (either strictly increasing or decreasing).
+
+So the algorithm: decompose $P$ into $x$-monotone chains.
+Sort the chains by their left endpoints. 
+Then sweepline events are the verticies. On the sweepline, we store pointers
+to each of the $x$-monotone chains sorted by $y$-coordinate.
+The sweepline (or chain object) has a pointer to the current edge of the chain that intersects the sweepline.
+Then to check intersection it is just line segment intersection of the edges on sweepline.
+When we reach a node in the chain we increment the edge to point to the next edge in the chain.
+We also remove old event points after we pass them, and insert a new event point for the next
+vertex in the chain. 
+
+
+\begin{algorithm}
+    \caption{Simple Chain}
+    \label{alg:neighbors}
+    \begin{algorithmic}[1]
+    \Function{chain}{$P$}
+        \State Break up $P$ into $k$ $x$-monotone chains, $C$
+        \State sort $C$ by leftmost $x$-coordinate
+        \State $events \gets $leftmost $x$-coordinates
+        \For{$e \in events$}
+            \State remove $e$ from $events$
+            \If{$e$ is Type 1}
+                \State insert $e.chain$ onto sweepline
+                \State add $e.chain.next\_node$ to $events$
+            \ElsIf{$e$ is Type 2}
+                \State Compare this chain to neighboring chains.
+                \State IF, they switch positions on sweepline, then they intersect. \textbf{return} not simple
+                \State otherwise, update sweepline for this node. \textcolor{blue}{This updates sweepline edge pointer and ordering}
+                \State add $e.chain.next\_node$ to $events$ 
+            \Else
+                \State Remove $e.chain$ from sweepline.
+            \EndIf
+        \EndFor
+        \State \textbf{return} Simple!
+    \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\textbf{Runtime:}
+So the runtime analysis is fairly straightforward. Breaking up $P$ we can do with a single linear pass through $P$ ($O(n)$).
+We can find the leftmost x-coordinate of any chain in $O(1)$ since it is in either increasing or decreasing order,
+so we check first or last elements. Then sorting takes $O(k \log k)$ since there are $2k$ chains.
+
+Then for each event: we establish that there are at most $O(k)$ things on the sweepline (all the chains),
+and also at most $O(k)$ events on the queue since we remove old points and add new points as we find them.
+So this means that any operation on either datastructure takes $O(\log k)$ time (assuming heap and balanced tree structures).
+Then we have a constant number of lookups/operations that take $O(\log k)$ time. 
+We also never elaborated how to update edge pointer, but if the chains are in an array or DLL we can just increment
+the pointer in constant time. 
+So each event takes $O(\log k)$.
+Then over the duration of the algorithm, every vertex could be explored $=n$. So $O(n \log k)$ for event processing.
+Since $k < n$ we have $O(n \log k)$ overall. 
+
+We also prove that the number of $x$-monotone chains is $2k = O(k)$.
+\begin{proof}
+    Suppose not, suppose there are more than $2$ $x$-monotone chains in-between two maxes.
+    So assume there are 3 chains. Then the chain bends back upon itself 2 different times (the ends of the chains).
+    Thus it makes an $s$ or $\reflectbox{s}$ (inverted x). Then clearly there is another max, a contradiction.
+\end{proof}
+
+\textbf{Correctness:}
+
+\begin{proof}
+    Consider breaking up $P$ into entirely separate line segments. 
+    The line segment intersection algorithm will determine if there are any intersections.
+    We show that at any event point, the state of our algorithm is equivalent to line segment intersection.
+
+    At event $e$ the line segments on the sweepline are only those who intersect the sweepline.
+    So, consider our algorithm at event $e$. We update the sweepline,
+    during which we increment what edge the sweepline considers for comparing intersection. 
+    Then our algorithm has all the edges of each chain that intersects the sweepline in the sweepline state.
+    If it doesn't, then it didn't increment (a contradiction) or a chain was not on the sweepline (also a contradiction).
+    These edges have a one-to-one correspondence with line segments in the line segment algorithm.
+    Thus the sweepline of our algorithm has the same status at any event as the line segment algorithm.
+
+    Then we need to show that our algorithm considers all the events (up until a segment intersection).
+    Suppose not, suppose our algorithm misses an event. Then there is an isolated edge that didn't get added (contradiction).
+    Or it does not cover all the vertices in a chain. If we sweep the line along the chain, we see that it 
+    increments to get the next vertex. So in a sweep, we will cover every vertex. By our decomposition, of $P$
+    every vertex is part of a $x$-monotone chain. This means every vertex is covered by the algorithm,
+    so we consider all the same events that segment intersection does. 
+
+    Then our algorithm is correct since it is equivalent to line segment intersection so it finds any intersection (if there is one).
+\end{proof}
+
+Thus our algorithm will correctly determine if there is an intersection. Then there are 2 cases.
+First case is it finds an intersection $\rightarrow$ it returns not simple. Or it doesn't find an intersection, so
+it returns simple. Thus our algorithm is correct.
+
 
 
 
