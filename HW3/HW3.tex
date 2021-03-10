@@ -104,6 +104,13 @@ We also prove that the number of $x$-monotone chains is $2k = O(k)$.
     Suppose not, suppose there are more than $2$ $x$-monotone chains in-between two maxes.
     So assume there are 3 chains. Then the chain bends back upon itself 2 different times (the ends of the chains).
     Thus it makes an $s$ or $\reflectbox{s}$ (inverted x). Then clearly there is another max, a contradiction.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width = 0.5\textwidth]{s_curve.png}
+        \caption{Two possible cases for 3 x-monotone curves between two maxes}
+    \end{figure}
+
 \end{proof}
 
 \textbf{Correctness:}
@@ -186,6 +193,9 @@ sum of vertical lengths (excluding islands) is the smallest.
 \end{enumerate}
 \hrule
 
+As a note, this solution is one of my favorites. I really struggled with it,
+but at the end the width update function is one of the coolest methods I have used,
+I thought that this was quite fun!
 
 So we first create a list of the event points. An event point stores an $x$ location,
 and a pointer to a vertex. We create one event point per vertex. 
@@ -246,6 +256,12 @@ This hinges on the correctness that our function $f$ correctly evaluates the wid
     where $u$ is the event of upper bank, and $l$ is lower bank. This is the same as what we described
     intuitively above. Therefore the base case holds and the function describes the width at the next event point.
 
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width = .5\textwidth]{init_width.png}
+        \caption{Initialization}
+    \end{figure}
+
     Inductive step: assume that the function correctly computes the width up to this event point.
     Show that it correctly computes at the next event point.
 
@@ -258,6 +274,11 @@ This hinges on the correctness that our function $f$ correctly evaluates the wid
     since a positive slope means the channel is contracting. And on the bottom it is now changing by $(1) * e.right$.
     This is just the sign $e.s$, so we add $e.s * e.right$, or $e.s * e.right - e.s *e.left = e.s(e.right - e.left)$.
     Thus our rate of change update is correct and it correctly measures the width at the next event point.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width = .5\textwidth]{case1.png}
+        \caption{Case 1 changing the slope}
+    \end{figure}
 
     Case 2: It is the beginning of an island. Then we just need to subtract off the wedge that is formed by the start of the island.
     We split it up into 2 events $u, l$ where $u$ is the upper slope and $l$ is the lower slope. 
@@ -265,6 +286,11 @@ This hinges on the correctness that our function $f$ correctly evaluates the wid
     $b \gets b - u.right + l.right = b + (-1) (u.right - 0) + (1) (l.right - 0) = b + u.s (u.right - u.left) + l.s (l.right - l.left)$.
     Since addition is associative we can do these events separately.
     Thus, our rate of change of the width is still correct and we correctly evaluate the width at the next point.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width = .5\textwidth]{case2.png}
+        \caption{Case 2 changing the slope}
+    \end{figure}
 
     So in both cases the rate of change is correct. Then the width at the next point is as follows.
     width at this point + rate of change * change in x. Well that is $f(next \: e) = a + b * (next \: e_x - e_x)$.
@@ -513,13 +539,15 @@ Let $P_i$ be the probability taken over all permutations of $A$ of $R_i$.
 
 There is only one number $x \in A$ such that $x > y$. Since $y = \max (A \setminus \{x\})$.
 Thus the probability $P_i$ is the probability that we select this number. So $P_i = 1/i$.
+When we enter the else statement we check every element which takes $O(i)$ time.
 
-This means that the expected number of times that we enter the else statement over all iterations is:
-$E = \sum_{i = 1} ^n P_i = \sum_{i = 1} ^n 1/n = \Theta(\ln (n)) = O(\log n)$ since this is the harmonic series.
-Each time we enter the else statement takes $O(n)$ time since we iterate over the whole list.
+This means that the expected amount of work from the else statement over all iterations is:
+the probability of entering the else statement * amount of work if we enter it.
+$E = \sum_{i = 1} ^n O(i) \cdot P_i = \sum_{i = 1} ^n O(i)/i = \sum_{i = 1} ^n c = cn = O(n)$
+So the expected amount of work from the else statement is $O(n)$
 
-Thus the running time is $n + O(n \cdot \log n)$ where the first $n$ comes from the recursion depth.
-We consider the recursion depth separately since the $\log n$ factor got `summed out'.
-So the overall running time is $O(n \log n)$
+Thus the running time is $n + O(n)$ where the first $n$ comes from the recursion depth.
+We consider the recursion depth separately since the second $n$ factor got `summed out'.
+So the overall running time is $O(n)$
 
 \end{document}
