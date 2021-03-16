@@ -1,5 +1,4 @@
 
-
 # Computational Geometry
 ## Contact
  - Name: Elliott Pryor
