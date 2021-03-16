@@ -187,9 +187,24 @@ Which by our mapping is $p.v \leq a \cdot p.x + b \cdot p.y - c \cdot p.z$.
 
 We do not care which parabola we choose, so our objective function is just a placeholder
 that will choose any feasible solution. 
+The search space is $(a,b,c) \in \reals ^3$ which correspond to parabola $y = a + bx - cx^2$.
+
+If the LP fails (empty feasible region) then we know that it is not possible to avoid all the balloons
+and buildings. If it returns a value, then the feasible region is non-empty and it is possible to avoid
+hitting balloons and buildings by setting proper $a, b, c$ parameters.
+It should be noted, that since the algorithm returns values on the edges of the search space,
+the point returned will just barely clip a balloon/building. We can change the parameters slightly
+to avoid this, unless the feasible region is just a single point (lower bound of $Q$ and upper of $P$ lie on one parabola).
+
 
 \textbf{Running Time:} There are a total of $m + n$ constraints, since there is one for each point in $P$ and $Q$.
 Thus we can solve the LP in expected $O(n)$ time.
+
+\textbf{Correctness: } We already showed that by our mapping a point is below the parabola
+if $p.v \leq a \cdot p.x + b \cdot p.y - c \cdot p.z$ (and opposite for above). 
+Constraint 1 ensures that all $P \leq parabola$ and constraint 2 ensures that all $Q \geq parabola$.
+Thus if the algorithm finds a solution, it must be a valid solution that avoids all the balloons and buildings.
+
 
 \problem{2.3}
 
@@ -204,6 +219,11 @@ algorithm should indicate this.
   \centering
   \includegraphics[width = 0.5\textwidth]{lp_c.png}
 \end{figure}
+
+\hrule
+
+
+
 
 
 \end{document}
