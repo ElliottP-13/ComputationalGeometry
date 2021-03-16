@@ -222,8 +222,29 @@ algorithm should indicate this.
 
 \hrule
 
+\begin{align*}
+  \text{Objective: }\, & & \\
+  & \max \ell & \\
+  \text{Subject To:} & & \\
+  & a_i \cdot s + a_i \cdot \ell + b_i \leq \ell & \forall h_i = a_i \cdot x + b_i\\
+  & a_i \cdot s + b_i \leq \ell & \forall h_i = a_i \cdot x + b_i\\
+\end{align*}
 
+In this case $\ell$ is the side length of our square (hence why we want to maximize it),
+and $s$ is the horizontal shift ($s$ is the location of left edge of box).
+The first constraint checks if the upper right corner is in the box (constraint 1 = $(s + \ell, \ell) \leq h_i$)
+and the second constraint checks if the upper left corner is in the box.
 
+Since we always want the lower halfplane we do not need to check if the bottom corners are 
+within the feasible region. Since they are directly below the two upper corners. 
 
+If the algorithm fails (empty feasible region) then the algorithm returns no square. Otherwise it returns
+$(\ell, s)$, where the square is defined by vertices: $(s, 0), (s + \ell, 0), (s + \ell, \ell), (s, \ell)$
+
+\textbf{Running time} There are a total of $2n$ constraints (2 for each halfplane: one upper right corner, one lower right corner)
+So the total running time is $O(2n) = O(n)$ expected.
+
+\textbf{Correctness:} The algorithm finds the square of maximum side-length that fits within the feasible region.
+If there is a bigger one, then the linear program did not find the max $\implies$ contradiction.
 
 \end{document}
