@@ -142,7 +142,81 @@ sites. Develop an algorithm that finds a set of $n$ point sites whose Voronoi
 diagram is exactly the given subdivision, if such a set exists.
 \hrule
 
+The challenging part of this problem is finding the first site.
+Once we find the first site we can use the perpendicular bisector property of the edges to find the others.
+As we do this, if we circle around and find conflicting information (a site should be in 2 different spots)
+then we know it is not Voronoi. 
+
+To find the first site, we need two vertices. If the graph has no vertices then a point anywhere works.
+If it has 1 vertex, then we do the following to find the angles of the 3 sites. Then we place them 
+at that angle at some common radius $R$.
+
+We observe that if you reflect a site over the 3 edges around a vertex you get back to the original site.
+We examine this vertex and edges in polar coordinates centered about the vertex.
+Let the angle of the three lines be $\Theta_1, \Theta_2, \Theta_3$ listed in counter-clockwise order (clockwise order also works),
+ and the angle of our site be $\phi$.
+The first reflection is $\phi ' = \phi + 2(\Theta_1 - \phi)$ (shifts by double the angle gap between $\Theta_1$ and $\phi$)
+This is more easily written as $\phi' = 2\Theta_1 - \phi$.
+The second and third reflections follow similarly.
+
+\begin{align}
+    \phi ' &= \phi + 2(\Theta_1 - \phi) = 2\Theta_1 - \phi \\
+    \phi '' &= \phi' + 2(\Theta_1 - \phi') = 2\Theta_1 - \phi'\\ 
+    \phi ''' &= \phi'' + 2(\Theta_1 - \phi'') = 2\Theta_1 - \phi''
+\end{align}
+
+Since after the 3rd reflection it should come back to the same spot (after full rotation),
+$\phi ''' = 2\pi + \phi$. We then substitute and solve this for $\phi$.
+
+We get the surprisingly simple 
+\begin{equation}
+    \phi = (\Theta_3 - \Theta_2 + \Theta_1) - \pi
+\end{equation}
+
+Solving this equation around a vertex gives us the direction of a site. 
+
+\textbf{Algorithm: }
+
+find 2 adjacent vertices in the diagram, $v_1, v_2$. Solve for $\phi_1, \phi_2$ around each site.
+We have that the shared edge on the first site is $\Theta_1$ and is $\Theta_3$ around the second site.
+Our starting site is the intersection of the two lines through $v_1, v_2$ at angle $\phi_1, \phi_2$ 
+respectively. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width = 0.5\textwidth]{phi.png}
+    \caption{Arrangement of $\Theta_1, \Theta_2, \Theta_3$ to solve for $\phi_1, \phi_2$}
+\end{figure}
+
+Then we do a breadth first search crossing each edge in the voronoi diagram. 
+We compute the site across the edge by the perpendicular bisector property. 
+Then we verify that this spot is the same as any previously computed site.
+If there is a discrepancy, then return not voronoi.
+Otherwise return the pointset computed. 
 
 
+\textbf{Runtime: }
+
+The first site can be computed in $O(1)$ time (solving 2 equations for $\phi_1, \phi_2$ and then line intersection)
+Then the breadth first search traverses every edge in the voronoi diagram once. Since it is planar,
+by Euler's formula we know that the number of edges is $O(n)$. So this algorithm works in $O(n)$.
+
+
+\textbf{Correctness: }
+
+As mentioned above there are a couple of weird edge cases that don't quite work.
+If there is just 1 vertex (3 sites) this works we just choose $R > 0$ randomly.
+We could have a set of just parallel lines (all sites co-linear). Where we just choose a perpendicular
+line to this, and put a point in the middle of each segment. 
+The nothing case which is trivial. 
+
+But ignoring these edge cases, we show that it is correct. 
+We established above that any point along $\phi$ is valid for a given voronoi vertex.
+Any site must be consistent with all of its vertices. 
+Clearly our chosen site is consistent with $v_1, v_2$, but what if it is inconsistent with another one.
+Then, when we traverse an inconsistent edge, we will place a site at the wrong spot. 
+When this wrong site is compared with another cell (ie it gets reflected across an edge)
+it will be a different location then the site already there. So the algorithm will stop and return not voronoi
+as required. 
 
 \end{document}
