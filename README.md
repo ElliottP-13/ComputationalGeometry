@@ -106,8 +106,8 @@ in class.
 |------|------------------------------------------------|----------------------|----------------------|------|--------------------------------------------|
 | 4/01 | Exam 2                                         |                      |                      |      |                                            |
 |      |                                                |                      |                      |      |                                            |
-| 4/06 | Arrangements 1                                 |                      |                      |  X   |                                            |
-| 4/08 |                                                |                      |                      |  X   |                                            |
+| 4/06 | Project Proposals                              |                      |                      |  X   |                                            |
+| 4/08 |  Motion Planning                               |                      |                      |  X   | DMLN L18, CGAA 13                          |
 |      |                                                |                      |                      |      |                                            |
 | 4/13 |                                                |                      |                      |      |                                            |
 | 4/15 |                                                |                      |                      |  X   |                                            |
@@ -121,7 +121,6 @@ in class.
 ### Potential Upcoming Topics:
 
 - Arrangements (DMLN L14, CGAA 8.3 / DMLN L15, CGAA 8.4)
-- Motion Planning (DMLN L18, CGAA 13)
 - Range searching
 - Well separated pair decomposition
 - Geometric sampling
