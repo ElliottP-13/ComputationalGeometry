@@ -42,7 +42,7 @@ Required:
 Optional but recommended:
 
 * [Computational Geometry: Algorithms and Applications](https://link.springer.com/book/10.1007%2F978-3-540-77974-2) by Mark de Berg, Otfried Cheong, Marc van Kreveld, Mark Overmars (CGAA in reading below).
-* [Discrete and Computational Geometry](https://press.princeton.edu/titles/9489.html) by Satyan L. Devadoss and Joseph O'Rourke
+* [Discrete and Computational Geometry](https://press.princeton.edu/titles/9489.html) by Satyan L. Devadoss and Joseph O'Rourke (DO in reading below)
 * [Computational Geometry in C (Second Edition)](https://cs.smith.edu/~jorourke/books/compgeom.html) by Joseph O'Rourke
 * [Graph Drawing](https://www.pearson.com/us/higher-education/program/Tollis-Graph-Drawing-Algorithms-for-the-Visualization-of-Graphs/PGM36916.html) by Giuseppe Di Battista, Peter Eades, Roberto Tamassia, Ioannis G. Tollis (GC in reading below).
 
@@ -102,21 +102,21 @@ in class.
 
 ### April
 
-| Date | Description                                    | Assigned             | Due                  | Proj | Recommended Reading                        |
-|------|------------------------------------------------|----------------------|----------------------|------|--------------------------------------------|
-| 4/01 | Exam 2                                         |                      |                      |      |                                            |
-|      |                                                |                      |                      |      |                                            |
-| 4/06 | Project Proposals                              |                      |                      |  X   |                                            |
-| 4/08 |  Motion Planning                               |                      |                      |  X   | DMLN L18, CGAA 13                          |
-|      |                                                |                      |                      |      |                                            |
-| 4/13 |                                                |                      |                      |      |                                            |
-| 4/15 |                                                |                      |                      |  X   |                                            |
-|      |                                                |                      |                      |      |                                            |
-| 4/20 |                                                |                      |                      |      |                                            |
-| 4/22 |                                                |                      |                      |  X   |                                            |
-|      |                                                |                      |                      |      |                                            |
-| 4/27 | Finals week                                    |                      |                      |  X   |                                            |
-| 4/29 | Finals Week                                    |                      |                      |  X   |                                            |
+| Date | Description                                    | Assigned             | Due                  | Proj | Recommended Reading                 |  Video                                                             |
+|------|------------------------------------------------|----------------------|----------------------|------|-------------------------------------|--------------------------------------------------------------------|
+| 4/01 | Exam 2                                         |                      |                      |      |                                     |                                                                    |
+|      |                                                |                      |                      |      |                                     |                                                                    |
+| 4/06 | Project Proposals                              |                      |                      |  X   |                                     |                                                                    |
+| 4/08 | Motion Planning                                |                      |                      |  X   | DMLN L18, CGAA 13                   | [1](https://montana.box.com/s/jrp1jiz1798v17tlh9m8b6q7oj9hxjqq)    |
+|      |                                                |                      |                      |      |                                     |                                                                    |
+| 4/13 | [Arrangements I](./notes/2021-04-13.pdf)       |                      |                      |      | DMLN L14, CGAA 8.3                  | [1](https://montana.box.com/s/unvoa7gehwifb8yz6o1l0nrsb8oqvgwi)    |
+| 4/15 |  Arrangements II                               |                      |                      |  X   | DMLN L15, CGAA 8.4                  |
+|      |                                                |                      |                      |      |                                     |
+| 4/20 |  Medial Axis                                   |                      |                      |      | DO 5.1-.2                           |
+| 4/22 |  Curve Reconstruction                          |                      |                      |  X   | DO 5.7                              |
+|      |                                                |                      |                      |      |                                     |
+| 4/27 | Finals week                                    |                      |                      |  X   |                                     |
+| 4/29 | Finals Week                                    |                      |                      |  X   |                                     |
 
 ### Potential Upcoming Topics:
 
