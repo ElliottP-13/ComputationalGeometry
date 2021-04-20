@@ -110,11 +110,11 @@ in class.
 | 4/08 | [Motion Planning](https://miro.com/app/board/o9J_lLfSaso=/) |         |                      |  X   | DMLN L18, CGAA 13                   | [1](https://montana.box.com/s/jrp1jiz1798v17tlh9m8b6q7oj9hxjqq)    |
 |      |                                                |                      |                      |      |                                     |                                                                    |
 | 4/13 | [Arrangements I](./notes/2021-04-13.pdf)       |                      |                      |      | DMLN L14, CGAA 8.3                  | [1](https://montana.box.com/s/unvoa7gehwifb8yz6o1l0nrsb8oqvgwi)    |
-| 4/15 |  Arrangements II                               | [HW 06](./hw/06.pdf) |                      |  X   | DMLN L15, CGAA 8.4                  |
-|      |                                                |                      |                      |      |                                     |
-| 4/20 |  Medial Axis                                   |                      |                      |      | DO 5.1-.2                           |
-| 4/22 |  Curve Reconstruction                          |                      | [HW 06](./hw/06.pdf) |  X   | DO 5.7                              |
-|      |                                                |                      |                      |      |                                     |
+| 4/15 | [Arrangements II](./notets/2021-04-15.pdf)     | [HW 06](./hw/06.pdf) |                      |  X   | DMLN L15, CGAA 8.4                  | [1](https://montana.box.com/s/z6cqrpifm1vlwumeanox3gs62zyw8g7x)    |
+|      |                                                |                      |                      |      |                                     |                                                                    |
+| 4/20 | [Medial Axis](https://miro.com/app/board/o9J_lLfSaso=/) |             |                      |      | DO 5.1-.2                           | [1](https://montana.box.com/s/dximnpnr52neb1ejzzndxftwt1xhu73n), [2](https://montana.box.com/s/6niqsxg0jajt0jmcgx6xslmk82hocr0l), [3](https://montana.box.com/s/f6rfnfov3q4v94az9k2gc9wdl0k2o80q) |
+| 4/22 | [Medial Axis](https://miro.com/app/board/o9J_lLfSaso=/) |             | [HW 06](./hw/06.pdf) |  X   | DO 5.1-.2                           | [1](https://montana.box.com/s/dximnpnr52neb1ejzzndxftwt1xhu73n), [2](https://montana.box.com/s/6niqsxg0jajt0jmcgx6xslmk82hocr0l), [3](https://montana.box.com/s/f6rfnfov3q4v94az9k2gc9wdl0k2o80q) |
+|      |                                                |                      |                      |      |                                     |                                                                    |
 | 4/27 | Finals week                                    |                      |                      |  X   |                                     |
 | 4/29 | Finals Week                                    |                      |                      |  X   |                                     |
 
