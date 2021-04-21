@@ -223,6 +223,10 @@ So the lines are the lasers (plus ones for the door frame). We compute the arran
 Since each face is convex we can just draw a line from one vertex to all the others to triangulate it
 and then sum the area of the triangles. We want to find the face with the maximum area. 
 
+This takes $O(n^2)$ to produce the arrangement. Then there are $O(n^2)$ faces with $O(1)$ vertices
+around each face (on average, since if there wasn't there would be $O(n^3)$ vertices which isn't true by Euler's theorem),
+so it takes quadratic time to compute all of the areas. So it is $O(n^2)$ alg.
+
 More realistically this can be used to find max/min area within regions bounded by lines. 
 
 
