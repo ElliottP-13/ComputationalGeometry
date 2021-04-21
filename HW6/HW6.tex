@@ -53,13 +53,23 @@ words
 
 \hrule
 
-I think that the projection of the lower envelope is also the voronoi diagram. 
-Since it is just a set of linear lines and every line is on the envelope at some point,
-the lower envelope is some sort of mirrored version of the upper envelope. 
-So the projection is also just the voronoi diagram (just flipped upside down).
+I think that the projection of the lower envelope is the convex hull.
+Or more specifically, the projection is the voronoi diagram of the points making up the convex hull.
+This projection is flipped/mirrored somehow that I can't really visualize, but the 
+planes on the lower envelope correspond to points on the convex hull.
+At a high level: points on the convex hull are the furthest out (there is a halfplane through
+the point dividing the plane where all points are on LHS of plane). 
+Since they are the furthest out they will have the most extreme slope (in some direction)
+thus far enough along that direction the plane is below all other planes and is thus on the lower envelope.
 
-The upper convex hull of the lifted points is the convex hull of the sites.
-These are the sites on the outermost 'ring' of the voronoi diagram (they have unbounded regeions)
+
+
+The upper convex hull of the lifted points is the delauney triangulation of the points
+on the convex hull. Similar as before, these points are the most extreme, and are the highest up. 
+So they will be on the convex hull. 
+Consider the example of a ton of points within radius 0.5 of the origin and points at (1,1), (-1,-1)
+(0.9, -1), (-1, 0.9). The upper convex hull is a house roof shaped thing. And it forms
+two triangles which is the delauney triangulation of these points.
 
 
 
@@ -85,10 +95,24 @@ words
 
 \hrule
 
+Similar to what I had partially mentioned in class with going to tangent points. 
+We draw line s-t. We slide the robot along the line until we hit a shape (more on computing this in a bit).
+(we assume robot can't spin/rotate only translate). 
+So if s-t line intersects a polygon. We draw line $\ell$ from s to the tangent point of this polygon.
+Sliding the robot along this line continuously and checking for intersection is the same as
+taking a vertex of the robot and making it a line segment parallel to $\ell$.
+We check if/where this segment intersects an obstacle. We move to there 
+and slide the robot in the direction of the edge that we intersected until this vertex no longer intersects
+the edge that we hit. We repeat.
+We also need to take the vertices of obstacles and make them lines to check for when a point
+of an obstacle hits the edge of robot (not edge of robot hits obstacle).
 
 
-
-
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale = 0.5]{problem2.png}
+    \caption{Problem 2 drawing basic idea }
+\end{figure}
 
 
 
@@ -132,7 +156,42 @@ $$
 \hrule
 
 
+\begin{enumerate}
+    \item 
+    \begin{enumerate}
+        \item $(+1, +1, +1, +1, +1, +1)$
+        
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.25]{3_1_a.png}
+            \caption{3.a}
+        \end{figure}
 
+        \item $(+1, 0, 0, -1, -1, -1)$
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.25]{3_1_b.png}
+            \caption{3.b}
+        \end{figure}
+        \item $(-1, 0, 0, -1, +1, -1)$
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.25]{3_1_c.png}
+            \caption{3.c}
+        \end{figure}
+        \item $(+1, -1, -1, -1, -1, -1)$
+        
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale = 0.25]{3_1_d.png}
+            \caption{3.d}
+        \end{figure}
+
+    \end{enumerate}
+
+    \item No it is not possible. Consider (b) and (c). To lie on 2 things it must be a vertex.
+    For (b) vertex must be above line 1, and for (c) it has to be below line 1. Contradiction.
+\end{enumerate}
 
 
 
@@ -152,6 +211,19 @@ You MAY (but do not need to) answer these questions by researching on the
 internet. Cite the sources you were using and give an explanation in your own
 words
 
+\hrule
+
+
+So I don't know how much of a real-world application this is. But imagine we are in a spy movie
+and we are trying to guard a room so nobody can get in without setting off the alarm. 
+We don't want a grid because that is too easy, but we want to make sure our lasers
+don't have holes big enough for someone to fit through. 
+
+So the lines are the lasers (plus ones for the door frame). We compute the arrangement. We compute the area by triangulating each face.
+Since each face is convex we can just draw a line from one vertex to all the others to triangulate it
+and then sum the area of the triangles. We want to find the face with the maximum area. 
+
+More realistically this can be used to find max/min area within regions bounded by lines. 
 
 
 \end{document}
